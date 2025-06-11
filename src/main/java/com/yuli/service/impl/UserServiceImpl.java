@@ -34,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 加盐 混淆密码
      */
-    private static final String SALT = "dingy";
+    private static final String SALT = "yuli";
 
 
     /**
