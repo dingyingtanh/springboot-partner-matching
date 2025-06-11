@@ -1,8 +1,8 @@
-package com.ding.common;
+package com.yuli.common;
 
 /**
  * 返回工具类
- * @author dingy
+ * @author yuli
  */
 public class ResultUtils {
 

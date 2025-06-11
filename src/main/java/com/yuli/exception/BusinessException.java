@@ -1,12 +1,10 @@
-package com.ding.exception;
+package com.yuli.exception;
 
-import com.ding.common.ErrorCode;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.yuli.common.ErrorCode;
 
 /**
  * 自定义异常
- * @author dingy
+ * @author yuli
  */
 public class BusinessException extends RuntimeException {
 

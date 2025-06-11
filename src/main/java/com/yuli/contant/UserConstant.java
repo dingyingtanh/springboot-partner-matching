@@ -1,8 +1,8 @@
-package com.ding.contant;
+package com.yuli.contant;
 
 /**
  * 用户常量
- * @author dingy
+ * @author yuli
  */
 public interface UserConstant {
 

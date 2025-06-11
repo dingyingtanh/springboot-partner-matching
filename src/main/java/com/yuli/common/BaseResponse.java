@@ -1,11 +1,11 @@
-package com.ding.common;
+package com.yuli.common;
 
 import lombok.Data;
 
 import java.io.Serializable;
 /**
  * 通用返回类
- * @author dingy
+ * @author yuli
  */
 @Data
 public class BaseResponse<T> implements Serializable {

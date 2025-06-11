@@ -1,4 +1,4 @@
-package com.ding.model;
+package com.yuli.model;
 
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * 用户
- * @author dingy
+ * @author yuli
  * @TableName user
  */
 @TableName(value ="user")

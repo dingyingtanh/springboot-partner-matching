@@ -1,14 +1,14 @@
-package com.ding.exception;
+package com.yuli.exception;
 
-import com.ding.common.BaseResponse;
-import com.ding.common.ErrorCode;
-import com.ding.common.ResultUtils;
+import com.yuli.common.BaseResponse;
+import com.yuli.common.ErrorCode;
+import com.yuli.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * @author dingy
+ * @author yuli
  */
 @RestControllerAdvice
 @Slf4j

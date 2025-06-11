@@ -1,13 +1,13 @@
-package com.ding.service.impl;
+package com.yuli.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ding.common.ErrorCode;
-import com.ding.exception.BusinessException;
-import com.ding.model.User;
-import com.ding.service.UserService;
-import com.ding.mapper.UserMapper;
+import com.yuli.common.ErrorCode;
+import com.yuli.exception.BusinessException;
+import com.yuli.model.User;
+import com.yuli.service.UserService;
+import com.yuli.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +16,11 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.ding.contant.UserConstant.USER_LOGIN_STATE;
+import static com.yuli.contant.UserConstant.USER_LOGIN_STATE;
 
 
 /**
-* @author dingy
+* @author yuli
 * @description 针对表【user(用户)】的数据库操作Service实现
 * @createDate 2025-05-28 17:12:10
 */

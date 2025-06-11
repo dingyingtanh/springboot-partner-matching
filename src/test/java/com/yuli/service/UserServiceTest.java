@@ -1,8 +1,6 @@
-package com.ding.service;
-import java.util.Date;
+package com.yuli.service;
 
-import com.ding.model.User;
-import org.junit.jupiter.api.Assertions;
+import com.yuli.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

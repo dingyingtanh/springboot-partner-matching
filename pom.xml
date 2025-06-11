@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ding</groupId>
-    <artifactId>springboot-user-center-management</artifactId>
+    <artifactId>springboot-partner-matching</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-user-center-management</name>
-    <description>springboot-user-center-management</description>
+    <name>springboot-partner-matching</name>
+    <description>springboot-partner-matching</description>
     <url/>
     <licenses>
         <license/>

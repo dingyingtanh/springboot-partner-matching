@@ -1,13 +1,13 @@
-package com.ding.service;
+package com.yuli.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ding.model.User;
+import com.yuli.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
-* @author dingy
+* @author yuli
 * @description 针对表【user(用户)】的数据库操作Service
 * @createDate 2025-05-28 17:12:10
 */

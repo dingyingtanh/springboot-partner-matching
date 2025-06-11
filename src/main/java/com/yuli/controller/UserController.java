@@ -1,28 +1,27 @@
-package com.ding.controller;
+package com.yuli.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ding.common.BaseResponse;
-import com.ding.common.ErrorCode;
-import com.ding.common.ResultUtils;
-import com.ding.exception.BusinessException;
-import com.ding.model.User;
-import com.ding.model.request.UserLoginRequest;
-import com.ding.model.request.UserRegisterRequest;
-import com.ding.service.UserService;
+import com.yuli.common.BaseResponse;
+import com.yuli.common.ErrorCode;
+import com.yuli.common.ResultUtils;
+import com.yuli.exception.BusinessException;
+import com.yuli.model.User;
+import com.yuli.model.request.UserLoginRequest;
+import com.yuli.model.request.UserRegisterRequest;
+import com.yuli.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ding.contant.UserConstant.ADMIN_ROLE;
-import static com.ding.contant.UserConstant.USER_LOGIN_STATE;
+import static com.yuli.contant.UserConstant.ADMIN_ROLE;
+import static com.yuli.contant.UserConstant.USER_LOGIN_STATE;
 
 /**
- * @author dingy
+ * @author yuli
  */
 @RestController
 @RequestMapping("/user")

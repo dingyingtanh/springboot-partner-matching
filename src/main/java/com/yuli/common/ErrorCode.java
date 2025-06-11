@@ -1,10 +1,8 @@
-package com.ding.common;
-
-import lombok.Data;
+package com.yuli.common;
 
 /**
  * 错误码
- * @author dingy
+ * @author yuli
  */
 
 public enum ErrorCode {
