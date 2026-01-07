@@ -1,6 +1,5 @@
 package com.yuli.model;
 
-
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
@@ -12,9 +11,11 @@ import java.util.Date;
  * @author yuli
  * @TableName user
  */
-@TableName(value ="user")
+@TableName(value = "user")
 @Data
 public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
@@ -67,7 +68,7 @@ public class User implements Serializable {
     private Date createTime;
 
     /**
-     * 
+     *
      */
     private Date updateTime;
 
@@ -87,6 +88,15 @@ public class User implements Serializable {
      */
     private String planetCode;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    /**
+     * 标签 json 列表
+     */
+    private String tags;
+
+    /**
+     * 个人介绍
+     */
+    private String proFile;
+
+
 }

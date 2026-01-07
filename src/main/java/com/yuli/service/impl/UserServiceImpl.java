@@ -2,8 +2,12 @@ package com.yuli.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yuli.common.ErrorCode;
+import com.yuli.common.ResultUtils;
 import com.yuli.exception.BusinessException;
 import com.yuli.model.User;
 import com.yuli.service.UserService;
@@ -11,11 +15,22 @@ import com.yuli.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static com.yuli.contant.UserConstant.ADMIN_ROLE;
 import static com.yuli.contant.UserConstant.USER_LOGIN_STATE;
 
 
@@ -30,6 +45,9 @@ import static com.yuli.contant.UserConstant.USER_LOGIN_STATE;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     /**
      * 加盐 混淆密码
@@ -159,6 +177,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
          safeUser.setUserStatus(originUser.getUserStatus());
          safeUser.setCreateTime(originUser.getCreateTime());
          safeUser.setPlanetCode(originUser.getPlanetCode());
+         safeUser.setTags(originUser.getTags());
+         safeUser.setProFile(originUser.getProFile());
          return safeUser;
     }
 
@@ -173,5 +193,124 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         return 1;
     }
+
+    /**
+     * 根据标签搜索用户 (内存过滤   )
+     * @param tagNameList 用户要拥有的标签
+     */
+    @Override
+    public List<User> searchUsersByTags(List<String> tagNameList){
+        if (CollectionUtils.isEmpty(tagNameList)){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //内存查询
+       // 创建一个QueryWrapper对象，用于封装查询条件
+       QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+       // 使用userMapper根据查询条件获取用户列表
+       List<User> userList = userMapper.selectList(queryWrapper);
+       // 创建一个Gson对象，用于JSON序列化和反序列化
+       Gson  gson = new Gson();
+
+       // 过滤用户列表，确保每个用户的标签集合中包含所有指定的标签
+       return userList.stream().filter(user -> {
+           // 获取用户的标签字符串
+           String tagsStr = user.getTags();
+           // 将用户的标签字符串反序列化为标签集合
+           Set<String> tempTagNameSet =gson.fromJson(tagsStr, new TypeToken<Set<String>>() {}.getType());
+           tempTagNameSet = Optional.ofNullable(tempTagNameSet).orElse(new HashSet<>());
+           // 遍历指定的标签列表
+           for (String tagName : tagNameList) {
+               // 如果用户的标签集合中不包含当前标签，则返回false，表示该用户不符合条件
+               if (!tempTagNameSet.contains(tagName)) {
+                   return false;
+               }
+           }
+           // 如果所有标签都匹配，则返回true，表示该用户符合条件
+           return true;
+       }).map(this::getSafetyUser).collect(Collectors.toList());
+    }
+
+    /**
+     * 更新用户信息
+     * @param user 用户信息
+     */
+    @Override
+    public int updateUser(User user, User loginUser) {
+        long userId = user.getId();
+        if (userId <= 0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 如果是管理员
+        // 如果不是管理员，则只能更新当前用户
+        if (!isAdmin(loginUser) && userId != loginUser.getId()){
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        User oldUser = userMapper.selectById(userId);
+        if (oldUser == null){
+            throw new BusinessException(ErrorCode.NULL_ERROR);
+        }
+        return userMapper.updateById(user);
+    }
+
+    /**
+     *  是否为管理员
+     * @param request 请求
+     * @return 是否为管理员
+     */
+    @Override
+    public boolean isAdmin(HttpServletRequest request){
+        // 仅管理员可查询
+        Object attribute = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user =  (User) attribute;
+        return user != null && user.getUserRole() == ADMIN_ROLE;
+    }
+    /**
+     *  是否为管理员
+     * @param loginUser 请求
+     * @return 是否为管理员
+     */
+    @Override
+    public boolean isAdmin(User loginUser){
+        // 仅管理员可查询
+        return loginUser != null && loginUser.getUserRole() == ADMIN_ROLE;
+    }
+
+    /**
+     * 获取当前用户登录信息
+     * @param request 请求
+     * @return 当前用户登录信息
+     */
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        if (request == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (userObj == null){
+            throw new BusinessException(ErrorCode.NOT_LOGIN);
+        }
+        return (User)userObj;
+    }
+//    /**
+//     * 根据标签搜索用户(SQL 查询)
+//     * @param tagNameList 用户要拥有的标签
+//     */
+//    @Deprecated
+//    private List<User> searchUsersByTagsBySQL(List<String> tagNameList){
+//        if (CollectionUtils.isEmpty(tagNameList)){
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+//        }
+////        sql查询
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        //like '%java$' and like '%python%'
+//        for (String tagName : tagNameList) {
+//            queryWrapper = queryWrapper.like("tags", tagName);
+//        }
+//        List<User> userList = userMapper.selectList(queryWrapper);
+//        //将userList遍历后返回的参数进行脱敏  返回脱敏后的用户列表
+//        return userList.stream().map(this::getSafetyUser).collect(Collectors.toList());
+//    }
+
+
 
 }
