@@ -1,10 +1,8 @@
 package com.yuli.service;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yuli.model.User;
+import com.yuli.model.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

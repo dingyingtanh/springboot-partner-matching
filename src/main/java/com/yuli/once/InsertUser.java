@@ -1,15 +1,9 @@
 package com.yuli.once;
 
 import com.yuli.mapper.UserMapper;
-import com.yuli.model.User;
-import com.yuli.service.UserService;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * @author dingy

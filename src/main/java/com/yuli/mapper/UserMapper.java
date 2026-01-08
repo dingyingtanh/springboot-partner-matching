@@ -3,7 +3,7 @@ package com.yuli.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yuli.model.User;
+import com.yuli.model.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

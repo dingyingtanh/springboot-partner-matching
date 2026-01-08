@@ -1,10 +1,13 @@
 package com.yuli.common;
 
+import lombok.Getter;
+
 /**
  * 错误码
  * @author yuli
  */
 
+@Getter
 public enum ErrorCode {
 
     SUCCESS(0, "ok", ""),
@@ -34,15 +37,4 @@ public enum ErrorCode {
         this.description = description;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

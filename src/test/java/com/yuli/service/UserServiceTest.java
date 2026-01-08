@@ -1,6 +1,7 @@
 package com.yuli.service;
 
-import com.yuli.model.User;
+import com.yuli.common.TeamStatusCommon;
+import com.yuli.model.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,6 +23,12 @@ public class UserServiceTest {
         user.setEmail("456");
         boolean result = userService.save(user);
         System.out.println(result);
+
+    }
+    @Test
+    public void test1() {
+        TeamStatusCommon teamStatus = TeamStatusCommon.getTeamStatus(1);
+        System.out.println(teamStatus.getText());
 
     }
 }

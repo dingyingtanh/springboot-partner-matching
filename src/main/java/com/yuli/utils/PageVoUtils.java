@@ -1,7 +1,7 @@
 package com.yuli.utils;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yuli.model.User;
+import com.yuli.model.domain.User;
 import com.yuli.model.vo.PageVo;
 
 public class PageVoUtils {

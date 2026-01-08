@@ -1,9 +1,8 @@
 package com.yuli.service;
 
-import com.yuli.model.User;
+import com.yuli.model.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 import javax.annotation.Resource;
