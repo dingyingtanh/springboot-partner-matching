@@ -10,6 +10,9 @@ import com.yuli.model.domain.Team;
 import com.yuli.model.domain.User;
 import com.yuli.model.dto.TeamQuery;
 import com.yuli.model.request.TeamAddRequest;
+import com.yuli.model.request.TeamJoinRequest;
+import com.yuli.model.request.TeamUpdateRequest;
+import com.yuli.model.vo.TeamUserVo;
 import com.yuli.service.TeamService;
 import com.yuli.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -72,16 +75,17 @@ public class TeamController {
     }
     /**
      * 更新队伍
-     * @param team 队伍
+     * @param teamUpdateRequest 队伍
      * @param request 请求
      * @return 更新结果
      */
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateTeam(@RequestBody Team team, HttpServletRequest request){
-        if (team == null){
+    public BaseResponse<Boolean> updateTeam(@RequestBody TeamUpdateRequest teamUpdateRequest, HttpServletRequest request){
+        if (teamUpdateRequest == null){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean result = teamService.updateById(team);
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.updateTeam(teamUpdateRequest,loginUser);
         if (!result){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "更新失败");
         }
@@ -110,16 +114,14 @@ public class TeamController {
      * @param request 请求
      * @return 队伍列表
      */
+    //6.关联查询已加入队伍的用户信息（可能会很耗费性能，建议大家用自己写 SQL 的方式实现）todo
     @GetMapping("/list")
-    public BaseResponse<List<Team>> listTeam(@RequestBody TeamQuery teamQuery,HttpServletRequest request){
+    public BaseResponse<List<TeamUserVo>> listTeam(@RequestBody TeamQuery teamQuery ,HttpServletRequest request){
         if (teamQuery == null){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Team team = new Team();
-        // 复制 teamQuery 到 team
-        BeanUtils.copyProperties(teamQuery, team);
-        QueryWrapper<Team> queryWrapper = new QueryWrapper<>(team);
-        List<Team> listTeam  = teamService.list( queryWrapper);
+        boolean isAdmin = userService.isAdmin(request);
+        List<TeamUserVo> listTeam  = teamService.listTeams(teamQuery,isAdmin);
         if (listTeam == null){
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
@@ -146,6 +148,25 @@ public class TeamController {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
         return ResultUtils.success(pageTeam);
+    }
+
+    /**
+     * 加入队伍
+     * @param teamJoinRequest 队伍加入
+     * @param request 请求
+     * @return 加入结果
+     */
+    @PostMapping("/join")
+    public BaseResponse<Boolean> joinTeam(@RequestBody TeamJoinRequest teamJoinRequest, HttpServletRequest request){
+        if (teamJoinRequest == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        boolean result = teamService.joinTeam(teamJoinRequest,loginUser);
+        if (!result){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "加入失败");
+        }
+        return ResultUtils.success(result);
     }
 
 }

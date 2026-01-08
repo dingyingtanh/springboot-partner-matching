@@ -27,7 +27,7 @@ public class UserServiceTest {
     }
     @Test
     public void test1() {
-        TeamStatusCommon teamStatus = TeamStatusCommon.getTeamStatus(1);
+        TeamStatusCommon teamStatus = TeamStatusCommon.getEnumByValue(1);
         System.out.println(teamStatus.getText());
 
     }
