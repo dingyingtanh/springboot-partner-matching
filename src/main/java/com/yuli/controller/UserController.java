@@ -35,7 +35,7 @@ import static com.yuli.contant.UserConstant.USER_LOGIN_STATE;
 @RestController
 @RequestMapping("/user")
 // 用户相关接口跨域
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserController {
     @Resource
     private UserService userService;
@@ -193,6 +193,13 @@ public class UserController {
         int result = userService.updateUser(user,loginUser);
         return ResultUtils.success(result);
     }
+    /**
+     * 推荐用户
+     * @param pageSize 页大小
+     * @param pageNum 页码
+     * @param request 请求
+     * @return 用户列表
+     */
     @GetMapping("/recommend")
     public BaseResponse<PageVo> recommendUsers(long pageSize, long pageNum, HttpServletRequest request){
         User loginUser =  userService.getLoginUser(request);
@@ -215,5 +222,17 @@ public class UserController {
             log.error("redis set key error",e);
         }
         return ResultUtils.success(pageVoUtils.pageVo(userPage));
+    }
+    /**
+     * 匹配用户
+     * @return 用户
+     */
+    @GetMapping("/match")
+    public BaseResponse<List<User>> matchUser(long num, HttpServletRequest request){
+        if (num <= 0 || num > 20){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.matchUser(num,loginUser));
     }
 }

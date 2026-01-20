@@ -5,4 +5,6 @@ public interface RedisConstant {
     String REDIS_KEY_DOCACHE_LOCK ="docache:lock";
     //用户键
     String REDIS_KEY_YULI_PRECACHEJOB ="yuli:precachejob:";
+    //加入队伍的锁
+    String REDIS_KEY_YULI_PRECACHEJOB_LOCK ="yuli:precachejob:lock";
 }
